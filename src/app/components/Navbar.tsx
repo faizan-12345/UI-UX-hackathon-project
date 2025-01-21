@@ -11,10 +11,12 @@ import {
 import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import { useShoppingCart } from "use-shopping-cart";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
+  const { cartCount = 0 } = useShoppingCart(); // Default to 0 if cartCount is undefined
 
   // Restore banner state on page load
   useEffect(() => {
@@ -115,9 +117,19 @@ export default function Navbar() {
 
             {/* Right Icons */}
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                <ShoppingCart className="h-5 w-5 text-gray-600" />
-              </Button>
+              {/* Cart Icon - Redirect to Cart page */}
+              <Link href="/cart">
+                <Button variant="ghost" className="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
+                  <ShoppingCart className="h-5 w-5 text-gray-600" />
+                  {cartCount > 0 && (
+                    <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-red-600 text-white text-xs flex justify-center items-center">
+                      {cartCount}
+                    </span>
+                  )}
+                </Button>
+              </Link>
+
+              {/* User Icon */}
               <Button variant="ghost" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                 <User className="h-5 w-5 text-gray-600" />
               </Button>
@@ -177,21 +189,19 @@ export default function Navbar() {
 
               {/* Right Section with Icons and Links */}
               <div className="flex items-center space-x-6">
-                {/* Navigation Links */}
-                {headerLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-200"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                
-                {/* Icons */}
-                <Button variant="ghost" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                  <ShoppingCart className="h-5 w-5 text-gray-600" />
-                </Button>
+                {/* Cart Icon - Redirect to Cart page */}
+                <Link href="/cart">
+                  <Button variant="ghost" className="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
+                    <ShoppingCart className="h-5 w-5 text-gray-600" />
+                    {cartCount > 0 && (
+                      <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-red-600 text-white text-xs flex justify-center items-center">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Button>
+                </Link>
+
+                {/* User Icon */}
                 <Button variant="ghost" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                   <User className="h-5 w-5 text-gray-600" />
                 </Button>
@@ -222,3 +232,131 @@ export default function Navbar() {
     </>
   );
 }
+
+
+// "use client";
+
+// import Link from "next/link";
+// import Button from "./Button";
+// import { ShoppingCart, User, X, Truck, Menu  } from "lucide-react";
+// import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+// import { useState, useEffect } from "react";
+// import { Swiper, SwiperSlide } from "swiper/react";
+// import { useShoppingCart } from "use-shopping-cart"; // Import useShoppingCart
+// import "swiper/css";
+
+// export default function Navbar() {
+//   const [isOpen, setIsOpen] = useState(false);
+//   const [showBanner, setShowBanner] = useState(true);
+//   const { cartCount } = useShoppingCart(); // Get cart count
+
+//   // Restore banner state on page load
+//   useEffect(() => {
+//     setShowBanner(true);
+//   }, []);
+
+//   const navigationLinks = [
+//     { href: "/plant-pots", label: "Plant pots" },
+//     { href: "/ceramics", label: "Ceramics" },
+//     { href: "/tables", label: "Tables" },
+//     { href: "/chairs", label: "Chairs" },
+//     { href: "/crockery", label: "Crockery" },
+//     { href: "/tableware", label: "Tableware" },
+//     { href: "/cutlery", label: "Cutlery" },
+//   ];
+
+//   const headerLinks = [
+//     { href: "/about", label: "About us" },
+//     { href: "/contact", label: "Contact" },
+//     { href: "/blog", label: "Blog" },
+//   ];
+
+//   return (
+//     <>
+//       {/* Promotional Banner */}
+//       {showBanner && (
+//         <div className="bg-[#2A254B] text-white py-2.5 relative">
+//           <div className="max-w-7xl mx-auto px-4">
+//             <div className="flex items-center justify-center">
+//               <div className="flex items-center gap-2">
+//                 <Truck className="h-5 w-5 sm:h-4 sm:w-4 flex-shrink-0 text-white" />
+//                 <span className="text-xs sm:text-sm">
+//                   Free delivery on all orders over £50 with code easter checkout
+//                 </span>
+//               </div>
+//             </div>
+//             <Button
+//               variant="ghost"
+//               className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-full transition-colors"
+//               onClick={() => setShowBanner(false)}
+//             >
+//               <X className="h-4 w-4 text-white" />
+//             </Button>
+//           </div>
+//         </div>
+//       )}
+
+//       <nav className="border-b border-gray-200">
+//         {/* Mobile Menu */}
+//         <div className="lg:hidden">
+//           <div className="flex items-center justify-between px-4 py-4">
+//             <div className="flex items-center space-x-4">
+//               {/* Search Icon */}
+//               <Button variant="ghost" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+//                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+//                 </svg>
+//               </Button>
+
+//               <Sheet open={isOpen} onOpenChange={setIsOpen}>
+//                 <SheetTrigger asChild>
+//                   <Button variant="ghost" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+//                     <Menu className="h-5 w-5 text-gray-600" />
+//                   </Button>
+//                 </SheetTrigger>
+//                 <SheetContent side="left" className="w-[300px] sm:w-[400px] bg-white">
+//                   <div className="flex flex-col space-y-6 mt-8">
+//                     {headerLinks.map((link) => (
+//                       <Link
+//                         key={link.href}
+//                         href={link.href}
+//                         onClick={() => setIsOpen(false)}
+//                         className="text-gray-600 hover:text-gray-900 text-lg font-medium transition-colors duration-200 px-2 py-1.5 rounded-md hover:bg-gray-50"
+//                       >
+//                         {link.label}
+//                       </Link>
+//                     ))}
+//                   </div>
+//                 </SheetContent>
+//               </Sheet>
+//             </div>
+
+//             {/* Logo */}
+//             <Link href="/" className="font-bold text-xl text-gray-800 font-satoshi">
+//               Avion
+//             </Link>
+
+//             {/* Right Icons */}
+//             <div className="flex items-center space-x-4">
+//               {/* Cart Icon - Redirect to Cart page */}
+//               <Link href="/cart">
+//                 <Button variant="ghost" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+//                   <ShoppingCart className="h-5 w-5 text-gray-600" />
+//                   {(cartCount || 0) > 0 && (
+//   <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-red-600 text-white text-xs flex justify-center items-center">
+//     {cartCount}
+//   </span>
+// )}
+
+//                 </Button>
+//               </Link>
+//               <Button variant="ghost" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+//                 <User className="h-5 w-5 text-gray-600" />
+//               </Button>
+//             </div>
+//           </div>
+//         </div>
+//       </nav>
+//     </>
+//   );
+// }
