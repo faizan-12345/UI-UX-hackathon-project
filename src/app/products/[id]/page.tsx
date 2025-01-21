@@ -83,8 +83,17 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; // Use useParams from next/navigation
 import Image from "next/image";
 
+// Define the type for a product
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  imageUrl: string;
+  description: string;
+}
+
 // Sample products data (in a real project, you'd fetch this from a backend or a database)
-const products = [
+const products: Product[] = [
   {
     id: 1,
     name: "Rustic Vase Set",
@@ -117,14 +126,14 @@ const products = [
 
 export default function ProductPage() {
   const { id } = useParams(); // Extract `id` from URL parameters
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<Product | null>(null); // Use Product type
 
   // Fetch the product based on the id when the component is mounted
   useEffect(() => {
     if (id) {
       const productId = Number(id); // Convert id to number
       const foundProduct = products.find((prod) => prod.id === productId);
-      setProduct(foundProduct);
+      setProduct(foundProduct || null); // Set product to null if not found
     }
   }, [id]); // Re-run when `id` changes
 
